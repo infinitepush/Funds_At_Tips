@@ -1,0 +1,107 @@
+[
+    {
+        "name": "SBI Gold Direct Plan Growth",
+        "category": "Very High Risk",
+        "one_year_return": "60.69%",
+        "three_year_return": "32.03%",
+        "five_year_return": "19.37%"
+    },
+    {
+        "name": "Motilal Oswal Midcap Fund Direct Growth",
+        "category": "Very High Risk",
+        "one_year_return": "-3.24%",
+        "three_year_return": "27.04%",
+        "five_year_return": "31.44%"
+    },
+    {
+        "name": "Bandhan Small Cap Fund Direct Growth",
+        "category": "Very High Risk",
+        "one_year_return": "4.63%",
+        "three_year_return": "31.76%",
+        "five_year_return": "30.42%"
+    },
+    {
+        "name": "Parag Parikh Flexi Cap Fund Direct Growth",
+        "category": "Very High Risk",
+        "one_year_return": "9.46%",
+        "three_year_return": "21.59%",
+        "five_year_return": "21.76%"
+    },
+    {
+        "name": "Motilal Oswal BSE Enhanced Value Index Fund Direct Growth",
+        "category": "Very High Risk",
+        "one_year_return": "12.80%",
+        "three_year_return": "32.67%",
+        "five_year_return": "NA"
+    },
+    {
+        "name": "HDFC Flexi Cap Direct Plan Growth",
+        "category": "Very High Risk",
+        "one_year_return": "10.46%",
+        "three_year_return": "21.64%",
+        "five_year_return": "26.88%"
+    },
+    {
+        "name": "JioBlackRock Flexi Cap Fund Direct Growth",
+        "category": "Very High Risk",
+        "one_year_return": "NA",
+        "three_year_return": "NA",
+        "five_year_return": "NA"
+    },
+    {
+        "name": "Nippon India Small Cap Fund Direct Growth",
+        "category": "Very High Risk",
+        "one_year_return": "-1.62%",
+        "three_year_return": "22.21%",
+        "five_year_return": "30.99%"
+    },
+    {
+        "name": "HDFC Mid Cap Fund Direct Growth",
+        "category": "Very High Risk",
+        "one_year_return": "9.81%",
+        "three_year_return": "26.42%",
+        "five_year_return": "28.27%"
+    },
+    {
+        "name": "Quant Small Cap Fund Direct Plan Growth",
+        "category": "Very High Risk",
+        "one_year_return": "-1.64%",
+        "three_year_return": "23.21%",
+        "five_year_return": "33.53%"
+    },
+    {
+        "name": "Nippon India Multi Cap Fund Direct Growth",
+        "category": "Very High Risk",
+        "one_year_return": "4.06%",
+        "three_year_return": "22.10%",
+        "five_year_return": "28.38%"
+    },
+    {
+        "name": "SBI PSU Direct Plan Growth",
+        "category": "Very High Risk",
+        "one_year_return": "6.22%",
+        "three_year_return": "29.15%",
+        "five_year_return": "32.06%"
+    },
+    {
+        "name": "Nippon India Large Cap Fund Direct Growth",
+        "category": "Very High Risk",
+        "one_year_return": "7.53%",
+        "three_year_return": "19.27%",
+        "five_year_return": "23.39%"
+    },
+    {
+        "name": "Motilal Oswal Large and Midcap Fund Direct Growth",
+        "category": "Moderately High Risk",
+        "one_year_return": "4.92%",
+        "three_year_return": "26.85%",
+        "five_year_return": "27.04%"
+    },
+    {
+        "name": "UTI Gold ETF FoF Direct Growth",
+        "category": "High Risk",
+        "one_year_return": "61.15%",
+        "three_year_return": "32.33%",
+        "five_year_return": "NA"
+    }
+]

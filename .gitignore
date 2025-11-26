@@ -1,0 +1,24 @@
+# Environments
+.env
+.env.*
+!.env.example
+.venv
+venv/
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Node
+node_modules/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+vite.log
+
+# Debugging
+debug_row_*.html
+
