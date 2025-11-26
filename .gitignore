@@ -22,3 +22,6 @@ vite.log
 # Debugging
 debug_row_*.html
 
+backend/data/data.json
+
+
