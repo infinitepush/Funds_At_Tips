@@ -1,28 +1,26 @@
+import requests
+import feedparser
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import StreamingResponse, JSONResponse
+from fastapi import FastAPI, BackgroundTasks, HTTPException, Query
+from typing import Optional
+from io import StringIO
+import logging
+import json
+import scraper_adapter
+import processor
 import os
 import sys
-# Add parent directory to path to allow running as script
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-import processor
-import scraper_adapter
-import json
-import logging
-from io import StringIO
-from typing import Optional
-
-from fastapi import FastAPI, BackgroundTasks, HTTPException, Query
-from fastapi.responses import StreamingResponse, JSONResponse
-from fastapi.encoders import jsonable_encoder
-from fastapi.middleware.cors import CORSMiddleware
-# import yfinance as yf
-import feedparser
-import requests
+sys.path.insert(0, os.path.abspath(
+    os.path.join(os.path.dirname(__file__), '..')))
 
 logging.basicConfig(level=logging.INFO)
 
 app = FastAPI(title="Mutual Fund Ranker API")
 
-# Allow CORS for local frontend development (adjust in production)
+# Allow CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -32,60 +30,60 @@ app.add_middleware(
 )
 
 
+# --------------------------------------------
+# ⚡ Always load latest data.json
+# --------------------------------------------
+def load_fresh():
+    data = scraper_adapter.load_latest_json()
+    if data is None:
+        raise HTTPException(status_code=404, detail="No scraped data found")
+    return data
+
+
 @app.get("/api/health")
 def health():
     return {"status": "ok"}
 
 
+# --------------------------------------------
+# ⭐ UPDATE (scraper trigger)
+# --------------------------------------------
 @app.post("/api/update")
 def update_data(background: BackgroundTasks, headless: bool = True, limit: int = 0):
-    """Trigger the scraper to run (background). Uses existing webscrapper/grow_cli.py script."""
-    # Schedule background job
     background.add_task(scraper_adapter.run_scraper, headless, limit)
-    return {"status": "scheduled"}
+    return {"status": "update started"}
 
 
+# --------------------------------------------
+# ⭐ Return updated list of all funds
+# --------------------------------------------
 @app.get("/api/funds")
 def get_funds():
-    """Return full cleaned dataset (JSON list)."""
     try:
-        raw = scraper_adapter.load_latest_json()
-        if raw is None:
-            raise HTTPException(
-                status_code=404, detail="No scraped data found")
+        raw = load_fresh()
         cleaned = processor.clean_and_normalize(raw)
         return JSONResponse(content=jsonable_encoder(cleaned))
-    except HTTPException:
-        raise
     except Exception as e:
-        logging.exception('Error in /api/funds')
-        return JSONResponse(content={"detail": str(e)}, status_code=500, headers={"Access-Control-Allow-Origin": "*"})
+        logging.exception("Error in /api/funds")
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.get("/api/funds/top10")
 def get_top10():
     try:
-        raw = scraper_adapter.load_latest_json()
-        if raw is None:
-            raise HTTPException(
-                status_code=404, detail="No scraped data found")
-        cleaned_df = processor.clean_df(raw)
-        ranked = processor.rank_funds(cleaned_df, top_n=10)
+        raw = load_fresh()
+        df = processor.clean_df(raw)
+        ranked = processor.rank_funds(df, top_n=10)
         return JSONResponse(content=jsonable_encoder(ranked))
-    except HTTPException:
-        raise
     except Exception as e:
-        logging.exception('Error in /api/funds/top10')
-        return JSONResponse(content={"detail": str(e)}, status_code=500, headers={"Access-Control-Allow-Origin": "*"})
+        logging.exception("Error in /api/funds/top10")
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.get("/api/export/csv")
 def export_csv():
     try:
-        raw = scraper_adapter.load_latest_json()
-        if raw is None:
-            raise HTTPException(
-                status_code=404, detail="No scraped data found")
+        raw = load_fresh()
         df = processor.clean_df(raw)
         top = processor.rank_funds_df(df, top_n=10)
 
@@ -93,72 +91,58 @@ def export_csv():
         top.to_csv(csv_io, index=False)
         csv_io.seek(0)
 
-        return StreamingResponse(iter([csv_io.getvalue()]), media_type="text/csv", headers={"Content-Disposition": "attachment; filename=top10_funds.csv", "Access-control-Allow-Origin": "*"})
-    except HTTPException:
-        raise
+        return StreamingResponse(
+            iter([csv_io.getvalue()]),
+            media_type="text/csv",
+            headers={
+                "Content-Disposition": "attachment; filename=top10_funds.csv",
+                "Access-control-Allow-Origin": "*"
+            }
+        )
     except Exception as e:
-        logging.exception('Error in /api/export/csv')
-        return JSONResponse(content={"detail": str(e)}, status_code=500, headers={"Access-Control-Allow-Origin": "*"})
+        logging.exception("Error in /api/export/csv")
+        raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/api/compare")
-def compare(fundA: str = Query(...), fundB: str = Query(...)):
-    try:
-        raw = scraper_adapter.load_latest_json()
-        if raw is None:
-            raise HTTPException(
-                status_code=404, detail="No scraped data found")
-        df = processor.clean_df(raw)
-        a = df[df['name'].str.lower() == fundA.strip().lower()]
-        b = df[df['name'].str.lower() == fundB.strip().lower()]
-        if a.empty or b.empty:
-            raise HTTPException(
-                status_code=404, detail="One or both funds not found")
-        return JSONResponse(content=jsonable_encoder({"fundA": a.iloc[0].to_dict(), "fundB": b.iloc[0].to_dict()}))
-    except HTTPException:
-        raise
-    except Exception as e:
-        logging.exception('Error in /api/compare')
-        return JSONResponse(content={"detail": str(e)}, status_code=500, headers={"Access-Control-Allow-Origin": "*"})
+# ---------------------------------------------------------
+# 🌍 RESTORED ORIGINAL RSS NEWS (WORKING)
+# ---------------------------------------------------------
 
 @app.get('/api/news')
 def get_news():
     try:
         feed = feedparser.parse('http://feeds.bbci.co.uk/news/rss.xml')
-        news = []
-        for entry in feed.entries:
-            news.append({'Title:': entry.title, 'Link:': entry.link})
+        news = [{"Title:": e.title, "Link:": e.link} for e in feed.entries]
         return JSONResponse(content=news)
     except Exception as e:
         logging.exception('Error in /api/news')
-        return JSONResponse(content={"detail": str(e)}, status_code=500, headers={"Access-Control-Allow-Origin": "*"})
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.get('/api/latest_news')
 def get_latest_news():
     try:
-        feed = feedparser.parse('https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml')
-        latest_news = []
-        for entry in feed.entries:
-            latest_news.append({'Title:': entry.title, 'Link:': entry.link})
-        return JSONResponse(content=latest_news)
+        feed = feedparser.parse(
+            'https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml')
+        news = [{"Title:": e.title, "Link:": e.link} for e in feed.entries]
+        return JSONResponse(content=news)
     except Exception as e:
         logging.exception('Error in /api/latest_news')
-        return JSONResponse(content={"detail": str(e)}, status_code=500, headers={"Access-Control-Allow-Origin": "*"})
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.get('/api/business_news')
 def get_business_news():
     try:
-        feed = feedparser.parse('https://rss.nytimes.com/services/xml/rss/nyt/Business.xml')
-        business_news = []
-        for entry in feed.entries:
-            business_news.append({'Title:': entry.title, 'Link:': entry.link})
-        return JSONResponse(content=business_news)
+        feed = feedparser.parse(
+            'https://rss.nytimes.com/services/xml/rss/nyt/Business.xml')
+        news = [{"Title:": e.title, "Link:": e.link} for e in feed.entries]
+        return JSONResponse(content=news)
     except Exception as e:
         logging.exception('Error in /api/business_news')
-        return JSONResponse(content={"detail": str(e)}, status_code=500, headers={"Access-Control-Allow-Origin": "*"})
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
-

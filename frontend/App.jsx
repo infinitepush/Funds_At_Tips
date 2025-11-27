@@ -4,7 +4,7 @@ import { parsePercentForTicker, abbreviateName } from './src/utils.js';
 import Compare from './src/components/Compare.jsx';
 import News from './src/components/News.jsx';
 import Funds from './src/components/Funds.jsx';
-import { AnalysisView } from './src/components/Analysis.jsx';
+
 import AccountView from './src/components/Account.jsx';
 import { MobileHeader, HeaderNav, FooterNav } from './src/components/Navigation.jsx';
 import StockTicker from './src/components/StockTicker.jsx';
@@ -158,8 +158,6 @@ const App = () => {
                 return <Funds fetchedFunds={fetchedFunds} lastUpdated={lastUpdated} handleUpdate={handleUpdate} isUpdating={isUpdating} />;
             case 'Performance':
                 return <PerformanceView stocks={displayStocks} selectedTickerProp={selectedTicker} />;
-            case 'Analysis':
-                return <AnalysisView setActiveView={setActiveView} stocks={displayStocks} />;
             case 'Compare':
                 return <Compare />;
             case 'Account':

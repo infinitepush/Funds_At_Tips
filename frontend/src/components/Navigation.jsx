@@ -22,7 +22,6 @@ export const HeaderNav = ({ activeView, setActiveView, isDark, toggleDark, isUpd
         { name: 'News', view: 'News' },
         { name: 'Funds', view: 'Funds' },
         { name: 'Performance', view: 'Performance' },
-        { name: 'Analysis', view: 'Analysis' },
         { name: 'Compare', view: 'Compare' },
     ];
 
