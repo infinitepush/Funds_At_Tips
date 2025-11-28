@@ -2,6 +2,9 @@
 # exit on error
 set -o errexit
 
+# Install pipenv
+pip install pipenv
+
 # Install Google Chrome
 apt-get update
 apt-get install -y procps
