@@ -45,6 +45,11 @@ def health():
     return {"status": "ok"}
 
 
+@app.get("/")
+def root():
+    return {"status": "Backend is running"}
+
+
 # --------------------------------------------
 # ⭐ UPDATE (scraper trigger)
 # --------------------------------------------
