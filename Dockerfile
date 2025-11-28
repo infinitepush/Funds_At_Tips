@@ -11,28 +11,14 @@ RUN cd frontend && npm run build
 FROM python:3.11-slim
 WORKDIR /app
 
-# Install system dependencies, forcefully updating certificates first
-RUN apt-get update && \
-    apt-get install -y --reinstall ca-certificates && \
-    update-ca-certificates && \
-    apt-get install -y curl gnupg unzip jq
-
-# Download Chrome and Chromedriver binaries
-RUN LATEST_VERSIONS_JSON_URL="https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json" && \
-    JSON_DATA=$(curl -k -sL ${LATEST_VERSIONS_JSON_URL}) && \
-    LATEST_STABLE_CHROME_URL=$(echo "${JSON_DATA}" | jq -r '[.versions[] | .downloads.chrome[] | select(.platform=="linux64") | .url] | last') && \
-    LATEST_STABLE_CHROMEDRIVER_URL=$(echo "${JSON_DATA}" | jq -r '[.versions[] | .downloads.chromedriver[] | select(.platform=="linux64") | .url] | last') && \
-    curl -k -L -o /tmp/chrome.deb "${LATEST_STABLE_CHROME_URL}" && \
-    curl -k -L -o /tmp/chromedriver.zip "${LATEST_STABLE_CHROMEDRIVER_URL}"
-
-# Install the downloaded Chrome browser
-RUN apt-get update && apt-get install -y /tmp/chrome.deb && rm /tmp/chrome.deb
-
-# Install the downloaded Chromedriver
-RUN unzip /tmp/chromedriver.zip -d /tmp/ && \
-    mv /tmp/chromedriver-linux64/chromedriver /usr/local/bin/ && \
-    chmod +x /usr/local/bin/chromedriver && \
-    rm -rf /tmp/chromedriver.zip /tmp/chromedriver-linux64
+# Install system dependencies for Chrome
+RUN apt-get update && apt-get install -y wget gnupg ca-certificates && \
+    mkdir -p /etc/apt/keyrings && \
+    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /etc/apt/keyrings/google-chrome.gpg && \
+    echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list && \
+    apt-get update && \
+    apt-get install -y google-chrome-stable --no-install-recommends && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy application code from the context
 COPY . .

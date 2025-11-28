@@ -12,6 +12,7 @@ requests = "*"
 feedparser = "*"
 numpy = "*"
 selenium = "*"
+webdriver-manager = "*"
 python-multipart = "*"
 
 [dev-packages]
