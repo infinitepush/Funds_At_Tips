@@ -27,13 +27,8 @@ def create_driver(headless=True):
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--start-maximized")
 
-    # If running in Render, specify Chrome binary location
-    if 'RENDER' in os.environ:
-        options.binary_location = "/usr/bin/google-chrome-stable"
-        service = Service()
-    else:
-        # For local development, use webdriver-manager
-        service = Service(ChromeDriverManager().install())
+    # Use webdriver-manager to automatically download and manage ChromeDriver
+    service = Service(ChromeDriverManager().install())
         
     return webdriver.Chrome(service=service, options=options)
 
