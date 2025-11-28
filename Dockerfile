@@ -30,7 +30,7 @@ COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 RUN pip install --upgrade pip && \
     pip install pipenv && \
     cd backend && \
-    pipenv lock -r > requirements.txt && \
+    pipenv requirements > requirements.txt && \
     pip install -r requirements.txt
 
 # Start the application
