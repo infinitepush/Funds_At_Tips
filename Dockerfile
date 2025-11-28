@@ -12,12 +12,18 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Install system dependencies for Chrome
-RUN apt-get update && apt-get install -y wget gnupg ca-certificates && \
+RUN apt-get update && apt-get install -y wget gnupg ca-certificates unzip && \
     mkdir -p /etc/apt/keyrings && \
     wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /etc/apt/keyrings/google-chrome.gpg && \
     echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list && \
     apt-get update && \
     apt-get install -y google-chrome-stable --no-install-recommends && \
+    CHROME_VERSION=$(google-chrome --version | cut -d " " -f 3 | cut -d "." -f 1) && \
+    CHROME_DRIVER_VERSION=$(wget -qO- https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}) && \
+    wget https://chromedriver.storage.googleapis.com/${CHROME_DRIVER_VERSION}/chromedriver_linux64.zip && \
+    unzip chromedriver_linux64.zip && \
+    mv chromedriver /usr/local/bin/ && \
+    rm chromedriver_linux64.zip && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy application code from the context

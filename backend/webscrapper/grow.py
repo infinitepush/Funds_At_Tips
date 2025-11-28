@@ -11,7 +11,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
-from webdriver_manager.chrome import ChromeDriverManager
+
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
@@ -27,8 +27,8 @@ def create_driver(headless=True):
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--start-maximized")
 
-    # Use webdriver-manager to automatically download and manage ChromeDriver
-    service = Service(ChromeDriverManager().install())
+    # Use the pre-installed ChromeDriver
+    service = Service(executable_path='/usr/local/bin/chromedriver')
         
     return webdriver.Chrome(service=service, options=options)
 
