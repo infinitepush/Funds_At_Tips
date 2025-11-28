@@ -38,28 +38,45 @@ const App = () => {
     const [lastUpdated, setLastUpdated] = useState(null);
 
     useEffect(() => {
-        let mounted = true
-        fetchAllFunds()
-            .then(data => {
-                if (mounted && Array.isArray(data) && data.length > 0) {
-                    setFetchedFunds(data)
-                    setLastUpdated(new Date().toISOString())
+        const fetchWithPolling = async () => {
+            setIsUpdating(true);
+            try {
+                const maxAttempts = 20;
+                let attempts = 0;
+                let data = null;
+                while (attempts < maxAttempts) {
+                    try {
+                        data = await fetchAllFunds();
+                        if (Array.isArray(data) && data.length > 0) break;
+                    } catch (e) {
+                        // Ignore errors and retry
+                    }
+                    await new Promise(res => setTimeout(res, 1000));
+                    attempts++;
                 }
-            })
-            .catch(err => {
-                console.warn('Failed to fetch funds from backend:', err)
-            })
-        return () => { mounted = false }
-    }, [])
+
+                if (data && Array.isArray(data)) {
+                    setFetchedFunds(data);
+                    setLastUpdated(new Date().toISOString());
+                } else {
+                    console.warn('Initial fetch failed after multiple attempts.');
+                }
+            } catch (err) {
+                console.error("Initial fetch failed:", err);
+            } finally {
+                setIsUpdating(false);
+            }
+        };
+
+        fetchWithPolling();
+    }, []);
 
     const handleUpdate = useCallback(async () => {
         setIsUpdating(true);
         try {
-            // Ask backend to start scraping
-            await triggerUpdate();
+            await triggerUpdate(); // Ask backend to start scraping
 
-            // Poll /api/funds until scraper writes data or timeout
-            const maxAttempts = 20; // ~20 seconds
+            const maxAttempts = 20;
             let attempts = 0;
             let data = null;
             while (attempts < maxAttempts) {
@@ -67,11 +84,10 @@ const App = () => {
                     data = await fetchAllFunds();
                     if (Array.isArray(data) && data.length > 0) break;
                 } catch (e) {
-                    // backend may return 404 while scraper runs; swallow and retry
+                    // Ignore errors and retry
                 }
-                // wait before retrying
                 await new Promise(res => setTimeout(res, 1000));
-                attempts += 1;
+                attempts++;
             }
 
             if (data && Array.isArray(data)) {
@@ -215,8 +231,8 @@ const App = () => {
 
                 <FooterNav activeView={activeView} setActiveView={setActiveView} />
 
-                {/* Gemini Chatbot - Renders on Performance view now */}
-                {activeView === 'Performance' && <GeminiChatbot />}
+                {/* Gemini Chatbot - Renders on Performance view and gets funds data */}
+                {activeView === 'Performance' && <GeminiChatbot funds={fetchedFunds} />}
             </div>
         </div>
     );

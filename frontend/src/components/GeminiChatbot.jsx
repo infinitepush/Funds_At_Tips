@@ -2,42 +2,92 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Icon } from './common';
 import { callGeminiApi } from '../api';
 
-const GeminiChatbot = () => {
+const GeminiChatbot = ({ funds = [] }) => {
+
     const [isOpen, setIsOpen] = useState(false);
+
     const [input, setInput] = useState('');
+
     const [isLoading, setIsLoading] = useState(false);
+
     const [history, setHistory] = useState([
+
         { role: 'model', text: 'Hello! I am Wisbee, your financial assistant. How can I help you with your dashboard or market questions today?' }
+
     ]);
+
     const chatEndRef = useRef(null);
 
+
+
     const scrollToBottom = () => {
+
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+
     };
+
+
 
     useEffect(scrollToBottom, [history]);
 
+
+
     const handleSend = async (e) => {
+
         e.preventDefault();
+
         if (!input.trim() || isLoading) return;
 
+
+
         const userMessage = input.trim();
+
         setInput('');
+
         setHistory(prev => [...prev, { role: 'user', text: userMessage }]);
+
         setIsLoading(true);
 
+
+
+        // Create a dynamic system prompt with top funds context
+
+        const topFunds = funds.slice(0, 10);
+
+        const fundsContext = topFunds.map(f =>
+
+            `- ${f.name} (1Y: ${f.one_year_return}, 3Y: ${f.three_year_return}, 5Y: ${f.five_year_return})`
+
+        ).join('\n');
+
+
+
+        const systemPrompt = `You are a friendly, concise, and helpful financial assistant named 'Wisbee'. Provide short, actionable advice. Here is the current list of top funds the user is seeing:\n${fundsContext}\n\nAnswer the user's question based on this data or general financial knowledge.`;
+
+
+
         const onResponse = (data) => {
+
             setHistory(prev => [...prev, { role: 'model', text: data.text, sources: data.sources }]);
+
             setIsLoading(false);
+
         };
+
+
 
         const onError = (errorMessage) => {
+
             setHistory(prev => [...prev, { role: 'model', text: errorMessage }]);
+
             setIsLoading(false);
+
         };
 
-        // Chatbot uses Google Search grounding by default
-        await callGeminiApi(userMessage, onResponse, onError);
+
+
+        await callGeminiApi(userMessage, onResponse, onError, systemPrompt);
+
     };
 
     // Icon Paths

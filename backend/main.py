@@ -1,3 +1,4 @@
+import threading
 import requests
 import feedparser
 from fastapi.middleware.cors import CORSMiddleware
@@ -28,6 +29,17 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+def run_scraper_in_background():
+    """Run scraper in a separate thread."""
+    logging.info("Triggering background scraper update...")
+    scraper_adapter.run_scraper(headless=True, limit=0)
+
+@app.on_event("startup")
+async def startup_event():
+    """Run scraper on startup in a background thread."""
+    thread = threading.Thread(target=run_scraper_in_background)
+    thread.start()
 
 
 # --------------------------------------------
