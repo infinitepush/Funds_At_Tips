@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+pandas
+beautifulsoup4
+requests
+feedparser
+numpy
+selenium
+webdriver-manager
+python-multipart
+pipenv
