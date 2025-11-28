@@ -14,12 +14,13 @@ WORKDIR /app
 # Install system dependencies for Chrome
 RUN apt-get update && apt-get install -y wget gnupg ca-certificates unzip jq && \
     LATEST_VERSIONS_JSON_URL="https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json" && \
-    LATEST_STABLE_CHROME_URL=$(wget -qO- ${LATEST_VERSIONS_JSON_URL} | jq -r '[.versions[] | .downloads.chrome[] | select(.platform=="linux64") | .url] | last') && \
-    LATEST_STABLE_CHROMEDRIVER_URL=$(wget -qO- ${LATEST_VERSIONS_JSON_URL} | jq -r '[.versions[] | .downloads.chromedriver[] | select(.platform=="linux64") | .url] | last') && \
-    wget -O /tmp/chrome.deb "${LATEST_STABLE_CHROME_URL}" && \
+    JSON_DATA=$(wget --no-check-certificate -qO- ${LATEST_VERSIONS_JSON_URL}) && \
+    LATEST_STABLE_CHROME_URL=$(echo "${JSON_DATA}" | jq -r '[.versions[] | .downloads.chrome[] | select(.platform=="linux64") | .url] | last') && \
+    LATEST_STABLE_CHROMEDRIVER_URL=$(echo "${JSON_DATA}" | jq -r '[.versions[] | .downloads.chromedriver[] | select(.platform=="linux64") | .url] | last') && \
+    wget --no-check-certificate -O /tmp/chrome.deb "${LATEST_STABLE_CHROME_URL}" && \
     apt-get install -y /tmp/chrome.deb && \
     rm /tmp/chrome.deb && \
-    wget -O /tmp/chromedriver.zip "${LATEST_STABLE_CHROMEDRIVER_URL}" && \
+    wget --no-check-certificate -O /tmp/chromedriver.zip "${LATEST_STABLE_CHROMEDRIVER_URL}" && \
     unzip /tmp/chromedriver.zip -d /tmp/ && \
     mv /tmp/chromedriver-linux64/chromedriver /usr/local/bin/ && \
     chmod +x /usr/local/bin/chromedriver && \
