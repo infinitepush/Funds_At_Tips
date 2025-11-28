@@ -1,3 +1,4 @@
+# Force git to detect change
 #!/usr/bin/env bash
 # exit on error
 set -o errexit
