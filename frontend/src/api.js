@@ -1,4 +1,4 @@
-const API_BASE = (import.meta.env.VITE_API_BASE || "http://localhost:8000") + "/api";
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || "http://localhost:8000") + "/api";
 
 // =======================
 // FUNDS API
@@ -38,25 +38,25 @@ export async function triggerUpdate() {
 // =======================
 
 export async function fetchNews() {
-  const res = await fetch(`https://mc-api-j0rn.onrender.com/api/news`);
+  const res = await fetch(`${API_BASE}/news`);
   if (!res.ok) throw new Error("Failed to fetch news");
   return res.json();
 }
 
 export async function fetchLatestNews() {
-  const res = await fetch(`https://mc-api-j0rn.onrender.com/api/latest_news`);
+  const res = await fetch(`${API_BASE}/latest_news`);
   if (!res.ok) throw new Error("Failed to fetch latest news");
   return res.json();
 }
 
 export async function fetchBusinessNews() {
-  const res = await fetch(`https://mc-api-j0rn.onrender.com/api/business_news`);
+  const res = await fetch(`${API_BASE}/business_news`);
   if (!res.ok) throw new Error("Failed to fetch business news");
   return res.json();
 }
 
 export async function fetchList() {
-  const res = await fetch(`https://mc-api-j0rn.onrender.com/api/list`);
+  const res = await fetch(`${API_BASE}/list`);
   if (!res.ok) throw new Error("Failed to fetch list");
   return res.json();
 }
