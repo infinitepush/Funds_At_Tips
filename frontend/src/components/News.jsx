@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { fetchNews, fetchLatestNews, fetchBusinessNews } from '../api';
 
 const News = () => {
   const [news, setNews] = useState([]);
@@ -10,25 +11,13 @@ const News = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const newsRes = await fetch('/api/news');
-        if (!newsRes.ok) {
-          throw new Error(`HTTP error! status: ${newsRes.status}`);
-        }
-        const newsData = await newsRes.json();
+        const newsData = await fetchNews();
         setNews(Array.isArray(newsData) ? newsData : [newsData]);
 
-        const latestNewsRes = await fetch('/api/latest_news');
-        if (!latestNewsRes.ok) {
-          throw new Error(`HTTP error! status: ${latestNewsRes.status}`);
-        }
-        const latestNewsData = await latestNewsRes.json();
+        const latestNewsData = await fetchLatestNews();
         setLatestNews(Array.isArray(latestNewsData) ? latestNewsData : [latestNewsData]);
 
-        const businessNewsRes = await fetch('/api/business_news');
-        if (!businessNewsRes.ok) {
-          throw new Error(`HTTP error! status: ${businessNewsRes.status}`);
-        }
-        const businessNewsData = await businessNewsRes.json();
+        const businessNewsData = await fetchBusinessNews();
         setBusinessNews(Array.isArray(businessNewsData) ? businessNewsData : [businessNewsData]);
       } catch (error) {
         console.error('Error fetching data:', error);

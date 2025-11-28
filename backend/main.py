@@ -35,8 +35,7 @@ app.add_middleware(
 # --------------------------------------------
 def load_fresh():
     data = scraper_adapter.load_latest_json()
-    if data is None:
-        raise HTTPException(status_code=404, detail="No scraped data found")
+    # Don't raise error if file not found, just return None
     return data
 
 
@@ -66,6 +65,9 @@ def update_data(background: BackgroundTasks, headless: bool = True, limit: int =
 def get_funds():
     try:
         raw = load_fresh()
+        if raw is None:
+            # Return empty list if no data.json exists yet
+            return JSONResponse(content=[])
         cleaned = processor.clean_and_normalize(raw)
         return JSONResponse(content=jsonable_encoder(cleaned))
     except Exception as e:
