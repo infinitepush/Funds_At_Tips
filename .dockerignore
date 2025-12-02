@@ -2,10 +2,11 @@
 .gitignore
 .dockerignore
 node_modules
-frontend/node_modules
+frontend
 __pycache__
 backend/__pycache__
 .venv
+backend/.venv
 venv/
 *.log
 npm-debug.log*
@@ -14,7 +15,6 @@ yarn-error.log*
 vite.log
 frontend/.env*
 debug_row_*.html
-Dockerfile
 render-build.sh
 start.sh
-backend/data/
+backend/data

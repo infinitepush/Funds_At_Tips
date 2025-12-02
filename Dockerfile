@@ -1,13 +1,4 @@
-# Stage 1: Build frontend
-FROM node:18-slim AS frontend-builder
-WORKDIR /app
-COPY frontend/package*.json frontend/
-COPY frontend/package-lock.json frontend/
-RUN cd frontend && npm install
-COPY frontend/ ./frontend/
-RUN cd frontend && npm run build
-
-# Stage 2: Python application
+# Stage 1: Python application
 FROM python:3.11-slim
 WORKDIR /app
 
@@ -23,15 +14,9 @@ RUN apt-get update && apt-get install -y wget gnupg ca-certificates && \
 # Copy application code from the context
 COPY . .
 
-# Copy built frontend from the builder stage
-COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
-
 # Install Python dependencies
 RUN pip install --upgrade pip && \
-    pip install pipenv && \
-    cd backend && \
-    pipenv requirements > requirements.txt && \
-    pip install -r requirements.txt
+    pip install -r backend/requirements.txt
 
 # Start the application
 WORKDIR /app/backend
