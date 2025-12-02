@@ -1,107 +1,219 @@
-# FundsAtTips: Mutual Fund Analysis and Ranking Platform
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>FundsAtTips — Mutual Fund Analysis Platform</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f5f7fa;
+        padding: 40px;
+        line-height: 1.6;
+        color: #222;
+    }
+    h1, h2, h3 {
+        color: #0b5ed7;
+    }
+    .container {
+        background: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        max-width: 900px;
+        margin: auto;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+    code, pre {
+        background: #f0f0f0;
+        padding: 10px;
+        display: block;
+        border-radius: 6px;
+        overflow-x: auto;
+    }
+    .link {
+        color: #e63946;
+        font-weight: bold;
+    }
+    ul { margin-left: 20px; }
+</style>
+</head>
 
-FundsAtTips is a full-stack web application designed to help users analyze and discover the best-performing mutual funds. It features a web scraper to gather the latest fund data, a ranking engine to identify top performers, and an intuitive user interface to view and compare funds. The application also includes an AI-powered chatbot, 'Wisbee', to provide financial advice and answer user questions.
+<body>
+<div class="container">
 
-## Features
+<h1>🌟 FundsAtTips — Mutual Fund Analysis & Ranking Platform</h1>
 
-- **Automated Data Scraping**: Gathers real-time mutual fund data from Groww.
-- **Top 10 Rankings**: A ranking algorithm processes the data to highlight the top 10 best-performing funds based on historical returns (1Y, 3Y, 5Y CAGR).
-- **Comprehensive Fund List**: View a detailed list of all scraped mutual funds.
-- **Fund Comparison**: (Future Implementation) A planned feature to compare two funds side-by-side.
-- **Downloadable Reports**: Export the top 10 fund rankings as a CSV file.
-- **AI Financial Assistant**: "Wisbee" chatbot, powered by Google's Gemini Pro, provides financial advice.
-- **Latest News**: Stay updated with the latest business and financial news from various RSS feeds.
+<p><strong>FundsAtTips</strong> is a full-stack web application designed to help users discover, analyze, and compare the best-performing mutual funds in India.  
+It features automated data scraping, a smart ranking engine, an AI assistant, and a modern UI.</p>
 
-## Architecture
+<p>🔗 <strong>Live Project:</strong>  
+<a class="link" href="https://funds-at-tips-git-master-piyush-tiwaris-projects-5cc291d5.vercel.app/" target="_blank">https://funds-at-tips-git-master-piyush-tiwaris-projects-5cc291d5.vercel.app/</a></p>
 
-The project is a monorepo with a decoupled frontend and backend.
+<p>🔗 <strong>Backend API:</strong>  
+<a class="link" href="https://funds-at-tips.onrender.com" target="_blank">https://funds-at-tips.onrender.com</a></p>
 
-- **Frontend**: A responsive user interface built with **React** and **Vite**, styled with **Tailwind CSS**. It is deployed on **Vercel**.
-- **Backend**: A robust API built with **Python**, **FastAPI**, and **Uvicorn**. It handles data scraping, processing, and serving data to the frontend. The backend is containerized using **Docker** and deployed on **Render**.
 
-### Tech Stack
+<hr />
 
-- **Frontend**: React, Vite, Tailwind CSS
-- **Backend**: Python, FastAPI, Uvicorn, Selenium (for scraping)
-- **Database**: JSON files (for scraped data)
-- **Deployment**: Vercel (Frontend), Render (Backend via Docker)
+<h2>🚀 Features</h2>
 
-## Getting Started
+<h3>📊 Mutual Fund Insights</h3>
+<ul>
+    <li><strong>Automated Scraper</strong> — Real-time scraping from Groww</li>
+    <li><strong>Top 10 Ranking Engine</strong> — Based on 1Y/3Y/5Y CAGR</li>
+    <li><strong>Complete Fund List</strong> — All cleaned & normalized data</li>
+    <li><strong>Future:</strong> Fund comparison</li>
+</ul>
 
-### Prerequisites
+<h3>🤖 AI Assistant — Wisbee</h3>
+<ul>
+    <li>Powered by <strong>Gemini Pro</strong></li>
+    <li>Provides financial guidance & answers queries</li>
+</ul>
 
-- Git
-- Node.js and npm
-- Python 3.11
-- Docker Desktop (for containerized backend deployment)
+<h3>📰 Latest Financial News</h3>
+<ul>
+    <li>BBC General News</li>
+    <li>NYT Latest News</li>
+    <li>NYT Business News</li>
+</ul>
 
-### Local Development
+<h3>📄 One-Click Reports</h3>
+<ul>
+    <li>Export <strong>Top 10 Funds</strong> as CSV</li>
+</ul>
 
-1.  **Clone the repository:**
-    ```bash
-    git clone <repository-url>
-    cd FundsAtTips_final
-    ```
+<hr />
 
-2.  **Run the Frontend:**
-    ```bash
-    cd frontend
-    npm install
-    npm run dev
-    ```
-    The frontend will be available at `http://localhost:5173`.
 
-3.  **Run the Backend:**
-    - Navigate to the backend directory:
-      ```bash
-      cd ../backend
-      ```
-    - Create a Python virtual environment and activate it:
-      ```bash
-      # On Windows
-      python -m venv .venv
-      .venv\Scripts\activate
+<h2>🏗️ Architecture Overview</h2>
 
-      # On macOS/Linux
-      python3 -m venv .venv
-      source .venv/bin/activate
-      ```
-    - Install the required dependencies:
-      ```bash
-      pip install -r requirements.txt
-      ```
-    - Start the FastAPI server:
-      ```bash
-      uvicorn main:app --reload --host 0.0.0.0 --port 8000
-      ```
-    The backend API will be available at `http://localhost:8000`.
+<h3>🖥️ Frontend</h3>
+<ul>
+    <li>React + Vite</li>
+    <li>Tailwind CSS</li>
+    <li>Deployed on Vercel</li>
+</ul>
 
-## API Endpoints
+<h3>⚙️ Backend</h3>
+<ul>
+    <li>FastAPI + Python + Uvicorn</li>
+    <li>Selenium scraper</li>
+    <li>JSON used as lightweight DB</li>
+    <li>Deployed on Render (Docker)</li>
+</ul>
 
-The backend exposes the following endpoints:
+<hr />
 
-- `GET /api/health`: Health check.
-- `GET /`: Backend status.
-- `POST /api/update`: Triggers the background scraper to update the fund data.
-- `GET /api/funds`: Returns the complete list of cleaned and normalized fund data.
-- `GET /api/funds/top10`: Returns the top 10 ranked mutual funds.
-- `GET /api/export/csv`: Exports the top 10 funds as a CSV file.
-- `GET /api/news`: Fetches general news from the BBC RSS feed.
-- `GET /api/latest_news`: Fetches the latest news from the NYT RSS feed.
-- `GET /api/business_news`: Fetches business news from the NYT RSS feed.
+<h2>🛠️ Tech Stack</h2>
 
-## Deployment
+<ul>
+    <li><strong>Frontend:</strong> React, Vite, Tailwind CSS</li>
+    <li><strong>Backend:</strong> FastAPI, Python, Uvicorn, Selenium</li>
+    <li><strong>Database:</strong> JSON Files</li>
+    <li><strong>Deployment:</strong> Vercel (UI), Render (API)</li>
+</ul>
 
-### Frontend (Vercel)
+<hr />
 
-The frontend is configured for continuous deployment on Vercel. Any pushes to the `main` branch will automatically trigger a new deployment. The live site is available at: [https://funds-at-tips.vercel.app/](https://funds-at-tips.vercel.app/)
+<h2>📦 Getting Started</h2>
 
-The following environment variable must be set in the Vercel project settings:
+<h3>🔧 Prerequisites</h3>
+<ul>
+    <li>Git</li>
+    <li>Node.js & npm</li>
+    <li>Python 3.11</li>
+    <li>Docker (optional)</li>
+</ul>
 
-- `VITE_API_BASE_URL`: The URL of the deployed backend (e.g., `https://funds-at-tips.onrender.com`).
+<h3>1️⃣ Clone Repository</h3>
+<pre><code>git clone &lt;repository-url&gt;
+cd FundsAtTips_final
+</code></pre>
 
-### Backend (Render)
+<h3>2️⃣ Start Frontend</h3>
+<pre><code>cd frontend
+npm install
+npm run dev
+</code></pre>
 
-The backend is deployed as a Docker container on Render. The `render.yaml` file in the root directory defines the service configuration. Any pushes to the `main` branch will automatically trigger a new build and deployment on Render.
+<p>Frontend runs at:
+<br />👉 http://localhost:5173</p>
 
-The backend service is live at: [https://funds-at-tips.onrender.com](https://funds-at-tips.onrender.com)
+<h3>3️⃣ Start Backend</h3>
+
+<h4>Create Virtual Environment</h4>
+<pre><code># Windows
+python -m venv .venv
+.venv\Scripts\activate
+
+# macOS / Linux
+python3 -m venv .venv
+source .venv/bin/activate
+</code></pre>
+
+<h4>Install Requirements</h4>
+<pre><code>pip install -r requirements.txt
+</code></pre>
+
+<h4>Run Server</h4>
+<pre><code>uvicorn main:app --reload --host 0.0.0.0 --port 8000
+</code></pre>
+
+<p>Backend runs at:
+<br />👉 http://localhost:8000</p>
+
+<hr />
+
+<h2>📡 API Endpoints</h2>
+
+<h3>General</h3>
+<ul>
+    <li><strong>GET /api/health</strong> — Health check</li>
+    <li><strong>GET /</strong> — Backend status</li>
+</ul>
+
+<h3>Mutual Funds</h3>
+<ul>
+    <li><strong>POST /api/update</strong> — Trigger scraper</li>
+    <li><strong>GET /api/funds</strong> — Get all funds</li>
+    <li><strong>GET /api/funds/top10</strong> — Top 10 funds</li>
+    <li><strong>GET /api/export/csv</strong> — Export CSV</li>
+</ul>
+
+<h3>News</h3>
+<ul>
+    <li><strong>GET /api/news</strong></li>
+    <li><strong>GET /api/latest_news</strong></li>
+    <li><strong>GET /api/business_news</strong></li>
+</ul>
+
+<hr />
+
+<h2>🚀 Deployment Guide</h2>
+
+<h3>🌐 Frontend (Vercel)</h3>
+<p>Auto-deployed from <strong>main</strong> branch.</p>
+
+<p><strong>Environment Variable:</strong></p>
+<pre><code>VITE_API_BASE_URL = https://funds-at-tips.onrender.com
+</code></pre>
+
+<h3>🐳 Backend (Render)</h3>
+<ul>
+    <li>Dockerized</li>
+    <li>Configured via render.yaml</li>
+</ul>
+
+<hr />
+
+<h2>🤝 Contributing</h2>
+<p>Contributions, issues, and feature requests are welcome!</p>
+
+<hr />
+
+<h2>📜 License</h2>
+<p>MIT License</p>
+
+</div>
+</body>
+</html>
