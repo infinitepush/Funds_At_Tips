@@ -4,7 +4,7 @@ import feedparser
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import StreamingResponse, JSONResponse
-from fastapi import FastAPI, BackgroundTasks, HTTPException, Query
+from fastapi import FastAPI, BackgroundTasks, HTTPException, Query, Response
 from typing import Optional
 from io import StringIO
 import logging
@@ -59,6 +59,11 @@ def health():
 @app.get("/")
 def root():
     return {"status": "Backend is running"}
+
+
+@app.head("/")
+def head_root():
+    return Response(status_code=200)
 
 
 # --------------------------------------------
